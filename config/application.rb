@@ -23,5 +23,10 @@ module PaymentDemo
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+    # Load application.yml and set environment variables
+    config_file = Rails.application.config_for(:application)
+    config_file.each do |key, value|
+      ENV[key.to_s] = value.to_s
+    end unless config_file.nil?
   end
 end

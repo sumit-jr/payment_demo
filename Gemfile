@@ -1,8 +1,13 @@
 source "https://rubygems.org"
 
 gem "bootsnap", require: false
+gem "devise", ">= 4.7.1"
+gem "dotenv-rails", "~> 2.1", ">= 2.1.1"
+gem "haml"
 gem "importmap-rails"
 gem "jbuilder"
+gem "jquery-rails"
+gem "money-rails"
 gem "pg", "~> 1.1"
 gem "puma", ">= 5.0"
 gem "rails", "~> 7.2.2", ">= 7.2.2.1"

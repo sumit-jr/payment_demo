@@ -13,6 +13,7 @@ gem "puma", ">= 5.0"
 gem "rails", "~> 7.2.2", ">= 7.2.2.1"
 gem "sprockets-rails"
 gem "stimulus-rails"
+gem "stripe-rails", "~> 2.6"
 gem "turbo-rails"
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 

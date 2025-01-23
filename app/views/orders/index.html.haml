@@ -1,3 +1,4 @@
+= stripe_javascript_tag
 %div
   %h1 List of products
   = form_tag({:controller => "orders", :action => "submit" }, {:id => 'order-details'}) do
@@ -40,7 +41,47 @@
     %br
     %br
     %hr
+
 :javascript
+  (function setupStripe() {
+    // Initialize stripe with publishable key
+    var stripe = Stripe("#{ENV['STRIPE_PUBLISHABLE_KEY']}");
+
+    // Create Stripe credit card elements
+    var elements = stripe.elements();
+    var card = elements.create('card');
+
+    // Add a listener to check for errors
+    card.addEventListener('change', function(event) {
+      var displayError = document.getElementById('card-errors');
+      document.getElementById('submit-stripe').disabled = false;
+      if (event.error) {
+        displayError.textContent = event.error.message;
+      } else {
+        displayError.textContent = '';
+      }
+    });
+
+    // Mount Stripe card element
+    card.mount('#card-element');
+    var form = document.getElementById('order-details');
+    form.addEventListener('submit', function(event) {
+      $('#submit-stripe').prop('disabled', true);
+      event.preventDefault();
+      stripe.createToken(card).then(function(result) {
+        if (result.error) {
+          var errorElement = document.getElementById('card-errors');
+          errorElement.textContent = result.error.message;
+        } else {
+          var $form = $("#order-details");
+          $form.append($('<input type="hidden" name="orders[token]"/>').val(result.token.id));
+          $('#order-type').val('stripe');
+          $form.submit();
+        }
+      });
+      return false;
+    });
+  }());
   function changeTab() {
     var newActiveTabID = $('input[name="payment-selection"]:checked').val();
     $('.paymentSelectionTab').removeClass('active');
@@ -49,7 +90,7 @@
 
 :css
   #card-element {
-    width:500px;
+    width: 500px;
   }
   .paymentSelectionTab {
     display: none;
